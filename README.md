@@ -138,4 +138,4 @@ Bug fix, idee e miglioramenti sono benvenuti! Apri una issue o invia una pull re
 
 ## ☕ Offrimi una birra 🍺
 
-Se EnvSync ti ha semplificato la vita, puoi supportare lo sviluppo [comprami una birra 🍺](https://buymeacoffee.com/passasooz)
+Se EnvSync ti ha semplificato la vita, puoi supportare lo sviluppo [offrimi una birra 🍺](https://buymeacoffee.com/passasooz)
