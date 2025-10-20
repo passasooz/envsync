@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+# primo giro in silenzio per evitare log inutili sui commit puliti
+node bin/envsync.js --check >/dev/null 2>&1
+status=$?
+
+if [ $status -ne 0 ]; then
+  # ripetiamo per mostrare i dettagli delle differenze
+  echo "[EnvSync] Controllo variabili..." >&2
+  node bin/envsync.js --check
+  echo "\n[EnvSync] Le variabili nei file .env e .env.example non sono sincronizzate." >&2
+  echo "[EnvSync] Esegui 'node bin/envsync.js' (oppure 'npx envsync') per aggiornarle prima di committare." >&2
+  exit $status
+fi

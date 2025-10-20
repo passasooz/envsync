@@ -1,0 +1,24 @@
+{
+  "name": "envsync-cli",
+  "version": "0.1.0",
+  "description": "CLI per sincronizzare le chiavi tra .env e .env.example (senza valori).",
+  "bin": {
+    "envsync": "bin/envsync.js"
+  },
+  "scripts": {
+    "envsync": "node bin/envsync.js",
+    "test": "node scripts/test-envsync.js",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "dotenv",
+    "cli",
+    "env",
+    "sync"
+  ],
+  "author": "Francesco Passanante",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^9.0.0"
+  }
+}

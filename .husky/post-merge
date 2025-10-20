@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+# Dopo un git pull/merge sincronizza i file .env locali con gli ultimi example
+# (aggiunge nuove chiavi e rimuove quelle obsolete senza toccare i valori esistenti).
+node bin/envsync.js --from-example --silent
