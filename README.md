@@ -136,6 +136,6 @@ Bug fix, idee e miglioramenti sono benvenuti! Apri una issue o invia una pull re
 
 ---
 
-## ☕ Offrimi un caffè
+## ☕ Offrimi una birra 🍺
 
 Se EnvSync ti ha semplificato la vita, puoi supportare lo sviluppo [comprami una birra 🍺](https://buymeacoffee.com/passasooz)
