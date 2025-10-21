@@ -1,141 +1,141 @@
 # 🧩 EnvSync — Keep your `.env.example` always in sync (keys only, never values)
 
-**EnvSync** è una CLI open-source che mantiene sincronizzato il file `.env.example` con il tuo `.env`, aggiornando automaticamente **solo i nomi delle variabili** (mai i valori).  
-Perfetta per evitare errori, semplificare l’onboarding e garantire che ogni progetto abbia sempre un `.env.example` aggiornato — senza rischiare di esporre segreti.
+**EnvSync** is an open-source CLI that keeps your `.env.example` file synced with your `.env`, automatically updating **only the variable names** (never the values).  
+Perfect for avoiding mistakes, streamlining onboarding, and ensuring every project always has an up-to-date `.env.example` — without risking secret exposure.
 
 ---
 
-## 🚀 Perché nasce EnvSync
+## 🚀 Why EnvSync exists
 
-Ogni developer conosce questa scena:
-> “Ehi, puoi mandarmi l’ultima versione del file `.env`?” 😅  
+Every dev knows this scene:
+> "Hey, can you send me the latest `.env` file?" 😅  
 
-Il problema?  
-- `.env` non è versionabile (contiene segreti)  
-- `.env.example` si dimentica sempre di aggiornare  
-- I team finiscono con versioni incoerenti e variabili mancanti  
+The problem?  
+- `.env` can't be versioned (contains secrets)  
+- `.env.example` always gets forgotten  
+- Teams end up with inconsistent versions and missing vars  
 
-**EnvSync risolve tutto con un solo comando.**
-
----
-
-## ✨ Cosa fa
-
-- 🔍 Controlla che ogni `.env*` abbia le stesse chiavi del rispettivo `.env*.example`  
-- ⚡️ Crea/aggiorna automaticamente gli example aggiungendo solo le chiavi mancanti  
-- 🛑 Non tocca mai i valori reali (zero leak di segreti)  
-- 💬 Mantiene commenti e ordine delle righe  
-- 🧠 Esce con codice di errore se ci sono differenze → perfetto per CI/CD  
-- 🔁 Può anche aggiornare i tuoi `.env` partendo dagli example (`--from-example`)  
-- 🧩 Compatibile con qualsiasi linguaggio o framework (PHP, Node, Python, etc.)
+**EnvSync fixes it all with a single command.**
 
 ---
 
-## ⚙️ Prerequisiti
+## ✨ What it does
+
+- 🔍 Checks that every `.env*` has the same keys as its respective `.env*.example`  
+- ⚡️ Auto-creates/updates examples by adding only missing keys  
+- 🛑 Never touches actual values (zero secret leaks)  
+- 💬 Preserves comments and line order  
+- 🧠 Exits with error code if differences found → perfect for CI/CD  
+- 🔁 Can also update your `.env` files from examples (`--from-example`)  
+- 🧩 Works with any language or framework (PHP, Node, Python, you name it)
+
+---
+
+## ⚙️ Prerequisites
 
 - Node.js ≥ 18
-- npm (o pnpm/yarn se preferisci)
-- Git, per abilitare l’hook Husky durante lo sviluppo
-- Husky (dev dependency installata automaticamente con `npm install`)
+- npm (or pnpm/yarn if that's your jam)
+- Git, to enable Husky hooks during development
+- Husky (dev dependency auto-installed with `npm install`)
 
 ---
 
-## 🧰 Installazione
+## 🧰 Installation
 
-### Via npm (globale)
+### Via npm (global)
 ```bash
 npm install -g envsync-cli
 ```
 
-### Da sorgente (locale)
+### From source (local)
 ```bash
-git clone https://github.com/tuo-utente/envsync.git
+git clone https://github.com/your-username/envsync.git
 cd envsync
 npm install
 npm install --global .
 ```
 
-> Suggerimento: puoi anche eseguire la CLI direttamente dal repository con `npx envsync` (dopo un `npm install`) oppure con `npm run envsync -- --help`.
+> Pro tip: you can also run the CLI directly from the repo with `npx envsync` (after `npm install`) or `npm run envsync -- --help`.
 
 ---
 
-## 🕹️ Utilizzo rapido
+## 🕹️ Quick usage
 
-Allinea automaticamente le chiavi mancanti in `.env.example` partendo da `.env`:
+Auto-align missing keys in `.env.example` from `.env`:
 ```bash
 envsync
 ```
 
-Per default la CLI analizza tutti i file che iniziano con `.env` nella cartella corrente (es. `.env`, `.env.local`, `.env.production`, …).
-Per ciascuno crea/aggiorna il relativo `.example` (es. `.env.local.example`, `.env.production.example`, …) mantenendo le variabili separate.
+By default, the CLI scans all files starting with `.env` in the current directory (e.g., `.env`, `.env.local`, `.env.production`, …).
+For each one, it creates/updates the related `.example` (e.g., `.env.local.example`, `.env.production.example`, …) keeping variables separated.
 
-Esegui un controllo senza modificare i file (ottimo in CI/CD):
+Run a check without modifying files (great for CI/CD):
 ```bash
 envsync --check
 ```
 
-Specificare percorsi personalizzati (ripeti il flag oppure usa la virgola per più file):
+Specify custom paths (repeat the flag or use comma for multiple files):
 ```bash
 envsync --env .env --env .env.production
-# oppure
+# or
 envsync --env config/.env.local --env config/.env.production
-# singolo file con example custom
+# single file with custom example
 envsync --env config/.env --example config/.env.sample
 ```
 
-Allineare i file `.env` locali con gli example (senza perdere i valori già presenti):
+Align local `.env` files with examples (without losing existing values):
 ```bash
 envsync --from-example
 ```
 
-In modalità `--check` la CLI esce con codice `1` quando trova differenze tra i file.
+In `--check` mode, the CLI exits with code `1` when it finds differences between files.
 
 ---
 
-## 🛠️ Come funziona
+## 🛠️ How it works
 
-1. Per ogni file `.env*` trova automaticamente (o genera) il relativo `.env*.example`.
-2. In modalità predefinita copia tutte le chiavi mancanti dall’`env` verso l’example, preservando commenti, ordine e valori reali.
-3. Con `--from-example` fa l’operazione inversa: aggiunge le nuove chiavi negli `env` locali e rimuove quelle obsolete, senza mai toccare i valori esistenti.
-4. In entrambi i casi segnala (o elimina) le chiavi rimaste indietro.
+1. For each `.env*` file, it auto-finds (or generates) the related `.env*.example`.
+2. In default mode, it copies all missing keys from `env` to example, preserving comments, order, and actual values.
+3. With `--from-example`, it does the reverse: adds new keys to local `env` files and removes obsolete ones, never touching existing values.
+4. In both cases, it reports (or removes) keys left behind.
 
-Il risultato? Example sempre aggiornati da versionare e file `.env` locali allineati dopo ogni pull.
+The result? Always up-to-date examples to version and local `.env` files aligned after every pull.
 
 ---
 
-## 🧪 Test
+## 🧪 Testing
 
-Se cloni il repository puoi eseguire la suite di test interna con:
+If you clone the repo, you can run the internal test suite with:
 ```bash
 npm test
 ```
 
 ---
 
-## 🔐 Hook Git (pre-commit & post-merge)
+## 🔐 Git hooks (pre-commit & post-merge)
 
 ### Pre-commit
-Per evitare di dimenticare l’allineamento degli example, il repository include un hook che lancia `envsync --check` prima di ogni commit.
+To avoid forgetting example alignment, the repo includes a hook that runs `envsync --check` before every commit.
 
-1. Esegui una volta `npm install` (attiverà automaticamente Husky grazie allo script `prepare`).
-2. Durante il commit, se un qualsiasi `.env*.example` non è aggiornato, il commit viene bloccato e vedi l’elenco delle chiavi da sistemare.
-3. Risolvi con `npx envsync` (oppure `node bin/envsync.js`) e ripeti il commit.
+1. Run `npm install` once (will auto-activate Husky thanks to the `prepare` script).
+2. During commit, if any `.env*.example` isn't up-to-date, the commit gets blocked and you see the list of keys to fix.
+3. Fix it with `npx envsync` (or `node bin/envsync.js`) and retry the commit.
 
 ### Post-merge
-Appena completi un `git pull` o una merge, viene eseguito `envsync --from-example` per aggiornare automaticamente i tuoi `.env` locali (aggiunge nuove chiavi vuote e rimuove quelle obsolete, lasciando intatti i valori).
+Right after you complete a `git pull` or merge, `envsync --from-example` runs to auto-update your local `.env` files (adds new empty keys and removes obsolete ones, leaving values intact).
 
-> Usa pull con merge (comportamento predefinito di Git). In caso di `git pull --rebase`, esegui manualmente `npx envsync --from-example`.
+> Use pull with merge (Git's default behavior). In case of `git pull --rebase`, manually run `npx envsync --from-example`.
 
-Entrambi gli hook girano solo in locale e non influiscono sulle CI, che possono comunque usare `envsync --check` come step aggiuntivo.
-
----
-
-## 🤝 Contribuire
-
-Bug fix, idee e miglioramenti sono benvenuti! Apri una issue o invia una pull request — assicurati soltanto che i test (`npm test`) passino prima di inviarla.
+Both hooks run only locally and don't affect CI, which can still use `envsync --check` as an additional step.
 
 ---
 
-## ☕ Offrimi una birra 🍺
+## 🤝 Contributing
 
-Se EnvSync ti ha semplificato la vita, puoi supportare lo sviluppo [offrimi una birra 🍺](https://buymeacoffee.com/passasooz)
+Bug fixes, ideas, and improvements are welcome! Open an issue or send a pull request — just make sure the tests (`npm test`) pass before shipping it.
+
+---
+
+## ☕ Buy me a beer 🍺
+
+If EnvSync has made your life easier, you can support development by [buying me a beer 🍺](https://buymeacoffee.com/passasooz)
