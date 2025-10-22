@@ -35,22 +35,15 @@
     style="font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans, 'Apple Color Emoji', 'Segoe UI Emoji';">
     <!-- Header -->
     <header class="sticky top-0/ bg-transparent">
-        <div class="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-            <a href="#" class="flex items-center gap-2 text-slate-200 hover:text-white">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                    <path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                </svg>
-                <span class="font-semibold">EnvSync</span>
+        <div class="mx-auto max-w-6xl px-6 py-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <a href="#" class="flex items-center text-slate-200 hover:text-white">
+                <span class="text-lg font-semibold tracking-tight">EnvSync</span>
             </a>
-            <nav class="hidden md:flex items-center gap-6 text-sm">
-                <a href="#why" class="text-slate-300 hover:text-white">Why</a>
-                <a href="#what" class="text-slate-300 hover:text-white">What it does</a>
-                <a href="#prereq" class="text-slate-300 hover:text-white">Prerequisites</a>
-                <a href="#install" class="text-slate-300 hover:text-white">Installation</a>
-                <a href="#usage" class="text-slate-300 hover:text-white">Quick usage</a>
-                <a href="#how" class="text-slate-300 hover:text-white">How it works</a>
-                <a href="#hooks" class="text-slate-300 hover:text-white">Git hooks</a>
-                <a href="#contrib" class="text-slate-300 hover:text-white">Contributing</a>
+            <nav class="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-300 md:flex-1 md:justify-center">
+                <a href="#prereq" class="hover:text-white">Prerequisites</a>
+                <a href="#install" class="hover:text-white">Installation</a>
+                <a href="#how" class="hover:text-white">How it works</a>
+                <a href="#contrib" class="hover:text-white">Contributing</a>
             </nav>
             <div class="flex items-center gap-2">
                 <a href="#install"
