@@ -1,7 +1,7 @@
-# 🧩 EnvSync — Keep your `.env.example` always in sync (keys only, never values)
+# 🧩 EnvSync — Keep your `.env` files aligned across the team (keys only, never values)
 
-**EnvSync** is an open-source CLI that keeps your `.env.example` file synced with your `.env`, automatically updating **only the variable names** (never the values).  
-Perfect for avoiding mistakes, streamlining onboarding, and ensuring every project always has an up-to-date `.env.example` — without risking secret exposure.
+**EnvSync** is an open-source CLI that keeps every teammate's `.env` aligned by syncing keys between local env files and their committed examples. It updates **only the variable names** (never the values), so new configuration spreads instantly without ever leaking secrets.  
+Perfect for avoiding the classic “who has the latest env?” ping, streamlining onboarding, and making sure everyone pulls the exact same variables after every merge.
 
 ---
 
@@ -13,20 +13,22 @@ Every dev knows this scene:
 The problem?  
 - `.env` can't be versioned (contains secrets)  
 - `.env.example` always gets forgotten  
-- Teams end up with inconsistent versions and missing vars  
+- Teammates keep different `.env` keys and ship bugs  
+- New collaborators lose hours hunting for missing variables  
 
-**EnvSync fixes it all with a single command.**
+**EnvSync keeps every `.env` in lockstep with a single command.**
 
 ---
 
 ## ✨ What it does
 
+- 🔁 Keeps local `.env` files aligned with the repo baseline by syncing keys both ways (env ↔ example)  
 - 🔍 Checks that every `.env*` has the same keys as its respective `.env*.example`  
 - ⚡️ Auto-creates/updates examples by adding only missing keys  
 - 🛑 Never touches actual values (zero secret leaks)  
 - 💬 Preserves comments and line order  
 - 🧠 Exits with error code if differences found → perfect for CI/CD  
-- 🔁 Can also update your `.env` files from examples (`--from-example`)  
+- 🚀 Updates your `.env` files from committed examples (`--from-example`) — perfect right after `git pull`  
 - 🧩 Works with any language or framework (PHP, Node, Python, you name it)
 
 ---
@@ -99,7 +101,7 @@ In `--check` mode, the CLI exits with code `1` when it finds differences between
 3. With `--from-example`, it does the reverse: adds new keys to local `env` files and removes obsolete ones, never touching existing values.
 4. In both cases, it reports (or removes) keys left behind.
 
-The result? Always up-to-date examples to version and local `.env` files aligned after every pull.
+The result? Every `.env` in the team stays up-to-date automatically, with committed examples acting as the single source of truth.
 
 ---
 

@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EnvSync — Keep your .env files aligned across the team (keys only, never values)</title>
+    <meta name="description"
+        content="EnvSync is an open‑source CLI that keeps every teammate's .env aligned by syncing keys between local env files and committed examples, never touching values.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .gradient {
+            background: radial-gradient(1200px 600px at 20% -20%, rgba(99, 102, 241, .25), transparent 60%), radial-gradient(1000px 600px at 80% 0%, rgba(236, 72, 153, .25), transparent 60%), linear-gradient(180deg, #0b1020 0%, #0a0d19 60%, #080a14 100%);
+        }
+
+        .glass {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+    </style>
+</head>
+
+<body class="gradient text-slate-100 min-h-screen antialiased"
+    style="font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans, 'Apple Color Emoji', 'Segoe UI Emoji';">
+    <!-- Header -->
+    <header class="sticky top-0/ bg-transparent">
+        <div class="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2 text-slate-200 hover:text-white">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <span class="font-semibold">EnvSync</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-6 text-sm">
+                <a href="#why" class="text-slate-300 hover:text-white">Why</a>
+                <a href="#what" class="text-slate-300 hover:text-white">What it does</a>
+                <a href="#prereq" class="text-slate-300 hover:text-white">Prerequisites</a>
+                <a href="#install" class="text-slate-300 hover:text-white">Installation</a>
+                <a href="#usage" class="text-slate-300 hover:text-white">Quick usage</a>
+                <a href="#how" class="text-slate-300 hover:text-white">How it works</a>
+                <a href="#hooks" class="text-slate-300 hover:text-white">Git hooks</a>
+                <a href="#contrib" class="text-slate-300 hover:text-white">Contributing</a>
+            </nav>
+            <div class="flex items-center gap-2">
+                <a href="#install"
+                    class="inline-flex items-center rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold hover:bg-indigo-400 shadow-lg shadow-indigo-500/20">Install</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="relative overflow-hidden">
+        <div class="mx-auto max-w-6xl px-6 pt-16 pb-20 md:pt-24 md:pb-28 text-center">
+            <div class="mx-auto max-w-3xl">
+                <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">🧩 EnvSync — Keep your <span
+                        class="text-indigo-400">.env</span> aligned across the team</h1>
+                <p class="mt-5 text-lg md:text-xl text-slate-300"><strong>EnvSync</strong> is an open‑source CLI that
+                    keeps every teammate's <span class="code">.env</span> aligned. It syncs keys between local env files
+                    and their tracked <span class="code">.env.example</span> counterparts, updating <strong>only the
+                        variable names</strong> (never the values). Perfect for shipping config updates without leaks
+                    and making sure nobody pulls missing variables again.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why exists -->
+    <section id="why" class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">🚀 Why EnvSync exists</h2>
+        <div class="glass rounded-2xl border border-white/10 p-6">
+            <p class="text-slate-300 italic">“Hey, can you send me the latest <span class="code">.env</span> file?” 😅
+            </p>
+            <ul class="mt-4 space-y-2 list-disc list-inside text-slate-300">
+                <li><span class="code">.env</span> can't be versioned (contains secrets)</li>
+                <li><span class="code">.env.example</span> always gets forgotten</li>
+                <li>Teams end up with inconsistent versions and missing vars</li>
+                <li>Everyone's local <span class="code">.env</span> drifts and bugs slip into production</li>
+            </ul>
+            <p class="mt-4 text-slate-200 font-medium">EnvSync keeps every <span class="code">.env</span> in lockstep
+                with a single command.</p>
+        </div>
+    </section>
+
+    <!-- What it does -->
+    <section id="what" class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">✨ What it does</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <ul class="glass rounded-2xl border border-white/10 p-6 space-y-2 text-slate-300">
+                <li>🔁 Keeps local <span class="code">.env*</span> files aligned with the repo baseline by syncing keys
+                    both ways (env ↔ example)</li>
+                <li>🔍 Checks that every <span class="code">.env*</span> has the same keys as its respective <span
+                        class="code">.env*.example</span></li>
+                <li>⚡️ Auto‑creates/updates examples by adding only missing keys</li>
+                <li>🛑 Never touches actual values (zero secret leaks)</li>
+                <li>💬 Preserves comments and line order</li>
+            </ul>
+            <ul class="glass rounded-2xl border border-white/10 p-6 space-y-2 text-slate-300">
+                <li>🧠 Exits with error code if differences found → perfect for CI/CD</li>
+                <li>🚀 Updates your <span class="code">.env</span> files from committed examples (<span
+                        class="code">--from-example</span>) — perfect right after <span class="code">git pull</span>
+                </li>
+                <li>🧩 Works with any language or framework (PHP, Node, Python, you name it)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Prerequisites -->
+    <section id="prereq" class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">⚙️ Prerequisites</h2>
+        <div class="glass rounded-2xl border border-white/10 p-6">
+            <ul class="list-disc list-inside text-slate-300 space-y-2">
+                <li>Node.js ≥ 18</li>
+                <li>npm (or pnpm/yarn)</li>
+                <li>Git, to enable Husky hooks during development</li>
+                <li>Husky (dev dependency auto‑installed with <span class="code">npm install</span>)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Installation -->
+    <section id="install" class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">🧰 Installation</h2>
+        <div class="grid md:grid-cols-2 gap-6 items-start">
+            <div class="glass rounded-2xl border border-white/10 p-6 code">
+                <div class="text-slate-300 mb-2">Via npm (global)</div>
+                <pre><code>npm install -g envsync-cli</code></pre>
+            </div>
+            <div class="glass rounded-2xl border border-white/10 p-6 code">
+                <div class="text-slate-300 mb-2">From source (local)</div>
+                <pre><code>git clone https://github.com/your-username/envsync.git
+cd envsync
+npm install
+npm install --global .</code></pre>
+                <p class="mt-3 text-slate-400">Pro tip: you can also run the CLI directly from the repo with <span
+                        class="code">npx envsync</span> (after <span class="code">npm install</span>) or <span
+                        class="code">npm run envsync -- --help</span>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick usage -->
+    <section id="usage" class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">🕹️ Quick usage</h2>
+        <div class="grid gap-6">
+            <div class="glass rounded-2xl border border-white/10 p-6 code">
+                <div class="text-slate-300 mb-2">Auto‑align missing keys in <span class="code">.env.example</span> from
+                    <span class="code">.env</span></div>
+                <pre><code>envsync</code></pre>
+                <p class="mt-2 text-slate-400">By default, the CLI scans all files starting with <span
+                        class="code">.env</span> in the current directory (e.g., <span class="code">.env</span>, <span
+                        class="code">.env.local</span>, <span class="code">.env.production</span>, …). For each one, it
+                    creates/updates the related <span class="code">.example</span> (e.g., <span
+                        class="code">.env.local.example</span>, <span class="code">.env.production.example</span>, …)
+                    keeping variables separated.</p>
+            </div>
+            <div class="glass rounded-2xl border border-white/10 p-6 code">
+                <div class="text-slate-300 mb-2">Run a check without modifying files (great for CI/CD)</div>
+                <pre><code>envsync --check</code></pre>
+            </div>
+            <div class="glass rounded-2xl border border-white/10 p-6 code">
+                <div class="text-slate-300 mb-2">Specify custom paths</div>
+                <pre><code>envsync --env .env --env .env.production
+# or
+envsync --env config/.env.local --env config/.env.production
+# single file with custom example
+envsync --env config/.env --example config/.env.sample</code></pre>
+            </div>
+            <div class="glass rounded-2xl border border-white/10 p-6 code">
+                <div class="text-slate-300 mb-2">Align local <span class="code">.env</span> files with examples (without
+                    losing existing values)</div>
+                <pre><code>envsync --from-example</code></pre>
+                <p class="mt-2 text-slate-400">In <span class="code">--check</span> mode, the CLI exits with code <span
+                        class="code">1</span> when it finds differences between files.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section id="how" class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">🛠️ How it works</h2>
+        <ol class="glass rounded-2xl border border-white/10 p-6 list-decimal list-inside text-slate-300 space-y-2">
+            <li>For each <span class="code">.env*</span> file, it auto‑finds (or generates) the related <span
+                    class="code">.env*.example</span>.</li>
+            <li>In default mode, it copies all missing keys from <span class="code">env</span> to example, preserving
+                comments, order, and actual values.</li>
+            <li>With <span class="code">--from-example</span>, it does the reverse: adds new keys to local <span
+                    class="code">env</span> files and removes obsolete ones, never touching existing values.</li>
+            <li>In both cases, it reports (or removes) keys left behind.</li>
+        </ol>
+        <p class="mt-4 text-slate-300">The result? Every teammate keeps an up‑to‑date <span class="code">.env</span>
+            automatically, while committed examples stay ready to version.</p>
+    </section>
+
+    <!-- Testing -->
+    <section id="testing" class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">🧪 Testing</h2>
+        <div class="glass rounded-2xl border border-white/10 p-6 code">
+            <pre><code>npm test</code></pre>
+            <p class="mt-2 text-slate-400">Run the internal test suite after cloning the repo.</p>
+        </div>
+    </section>
+
+    <!-- Git hooks -->
+    <section id="hooks" class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">🔐 Git hooks (pre‑commit & post‑merge)</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="glass rounded-2xl border border-white/10 p-6">
+                <h3 class="font-semibold mb-2">Pre‑commit</h3>
+                <ol class="list-decimal list-inside text-slate-300 space-y-2">
+                    <li>Run <span class="code">npm install</span> once (will auto‑activate Husky thanks to the <span
+                            class="code">prepare</span> script).</li>
+                    <li>During commit, if any <span class="code">.env*.example</span> isn't up‑to‑date, the commit gets
+                        blocked and you see the list of keys to fix.</li>
+                    <li>Fix it with <span class="code">npx envsync</span> (or <span class="code">node
+                            bin/envsync.js</span>) and retry the commit.</li>
+                </ol>
+            </div>
+            <div class="glass rounded-2xl border border-white/10 p-6">
+                <h3 class="font-semibold mb-2">Post‑merge</h3>
+                <p class="text-slate-300">Right after you complete a <span class="code">git pull</span> or merge, <span
+                        class="code">envsync --from-example</span> runs to auto‑update your local <span
+                        class="code">.env</span> files (adds new empty keys and removes obsolete ones, leaving values
+                    intact).</p>
+                <p class="mt-2 text-slate-400">Use pull with merge (Git's default behavior). In case of <span
+                        class="code">git pull --rebase</span>, manually run <span class="code">npx envsync
+                        --from-example</span>.</p>
+                <p class="mt-2 text-slate-400">Both hooks run only locally and don't affect CI, which can still use
+                    <span class="code">envsync --check</span> as an additional step.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contributing -->
+    <section id="contrib" class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">🤝 Contributing</h2>
+        <div class="glass rounded-2xl border border-white/10 p-6">
+            <p class="text-slate-300">Bug fixes, ideas, and improvements are welcome! Open an issue or send a pull
+                request — just make sure the tests (<span class="code">npm test</span>) pass before shipping it.</p>
+        </div>
+    </section>
+
+    <!-- Support -->
+    <section id="support" class="mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6">🍺 Buy me a beer</h2>
+        <div class="glass rounded-2xl border border-white/10 p-6">
+            <p class="text-slate-300">If EnvSync has made your life easier, you can support development by <a
+                    href="https://buymeacoffee.com/passasooz"
+                    class="underline decoration-dotted hover:text-white">buying me a beer 🍺</a>.</p>
+        </div>
+    </section>
+
+    <footer class="border-t border-white/10">
+        <div
+            class="mx-auto max-w-6xl px-6 py-10 text-sm text-slate-400 flex flex-col md:flex-row gap-2 md:items-center md:justify-between">
+            <div>© <span id="y"></span> EnvSync. Keys only, never values.</div>
+            <div class="opacity-70">Made for smooth onboarding.</div>
+        </div>
+    </footer>
+
+    <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+
+</html>
