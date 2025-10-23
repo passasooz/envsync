@@ -16,6 +16,10 @@
             scroll-behavior: smooth;
         }
 
+        body {
+            overflow-x: hidden;
+        }
+
         .gradient {
             background: radial-gradient(1200px 600px at 20% -20%, rgba(99, 102, 241, .25), transparent 60%), radial-gradient(1000px 600px at 80% 0%, rgba(236, 72, 153, .25), transparent 60%), linear-gradient(180deg, #0b1020 0%, #0a0d19 60%, #080a14 100%);
         }
@@ -28,26 +32,72 @@
         .code {
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
         }
+
+        pre {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #install .code,
+        #usage .code {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #install pre,
+        #usage pre {
+            min-width: max-content;
+        }
     </style>
 </head>
 
 <body class="gradient text-slate-100 min-h-screen antialiased"
     style="font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, Noto Sans, 'Apple Color Emoji', 'Segoe UI Emoji';">
     <!-- Header -->
-    <header class="sticky top-0/ bg-transparent">
-        <div class="mx-auto max-w-6xl px-6 py-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <a href="#" class="flex items-center text-slate-200 hover:text-white">
-                <span class="text-lg font-semibold tracking-tight">EnvSync</span>
-            </a>
-            <nav class="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-300 md:flex-1 md:justify-center">
-                <a href="#prereq" class="hover:text-white">Prerequisites</a>
-                <a href="#install" class="hover:text-white">Installation</a>
-                <a href="#how" class="hover:text-white">How it works</a>
-                <a href="#contrib" class="hover:text-white">Contributing</a>
-            </nav>
-            <div class="flex items-center gap-2">
+    <header class="sticky top-0 z-50 border-b border-white/5 bg-slate-950/70 backdrop-blur">
+        <div class="mx-auto max-w-6xl px-6 py-4">
+            <div class="flex items-center justify-between gap-4">
+                <a href="#" class="flex items-center text-slate-200 hover:text-white">
+                    <span class="text-lg font-semibold tracking-tight">EnvSync</span>
+                </a>
+                <div class="hidden md:flex md:flex-1 md:items-center md:justify-center">
+                    <nav class="flex items-center gap-6 text-sm text-slate-300">
+                        <a href="#prereq" class="hover:text-white">Prerequisites</a>
+                        <a href="#install" class="hover:text-white">Installation</a>
+                        <a href="#how" class="hover:text-white">How it works</a>
+                        <a href="#contrib" class="hover:text-white">Contributing</a>
+                    </nav>
+                </div>
+                <div class="hidden md:flex items-center gap-2">
+                    <a href="#install"
+                        class="inline-flex items-center rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold hover:bg-indigo-400 shadow-lg shadow-indigo-500/20">Install</a>
+                </div>
+                <div class="flex items-center gap-3 md:hidden">
+                    <a href="#install"
+                        class="inline-flex items-center rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold hover:bg-indigo-400 shadow-lg shadow-indigo-500/20">Install</a>
+                    <button type="button"
+                        class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-slate-200 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                        aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+                        <span class="sr-only">Apri il menu</span>
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="6" x2="20" y2="6"></line>
+                            <line x1="4" y1="12" x2="20" y2="12"></line>
+                            <line x1="4" y1="18" x2="20" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu"
+                class="mt-4 hidden flex-col gap-4 rounded-2xl border border-white/10 bg-slate-900/90 p-4 md:hidden">
+                <nav class="flex flex-col gap-3 text-sm text-slate-300">
+                    <a href="#prereq" class="hover:text-white">Prerequisites</a>
+                    <a href="#install" class="hover:text-white">Installation</a>
+                    <a href="#how" class="hover:text-white">How it works</a>
+                    <a href="#contrib" class="hover:text-white">Contributing</a>
+                </nav>
                 <a href="#install"
-                    class="inline-flex items-center rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold hover:bg-indigo-400 shadow-lg shadow-indigo-500/20">Install</a>
+                    class="inline-flex items-center justify-center rounded-xl bg-indigo-500 px-3 py-2 text-sm font-semibold hover:bg-indigo-400 shadow-lg shadow-indigo-500/20">Install</a>
             </div>
         </div>
     </header>
@@ -260,7 +310,25 @@ envsync --env config/.env --example config/.env.sample</code></pre>
         </div>
     </footer>
 
-    <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+    <script>
+        const menuButton = document.querySelector('[data-menu-toggle]');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (menuButton && mobileMenu) {
+            menuButton.addEventListener('click', () => {
+                const isHidden = mobileMenu.classList.toggle('hidden');
+                menuButton.setAttribute('aria-expanded', String(!isHidden));
+            });
+
+            mobileMenu.querySelectorAll('a').forEach((link) => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    menuButton.setAttribute('aria-expanded', 'false');
+                });
+            });
+        }
+
+        document.getElementById('y').textContent = new Date().getFullYear();
+    </script>
 </body>
 
 </html>
