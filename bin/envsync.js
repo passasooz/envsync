@@ -36,7 +36,7 @@ function parseArgs(argv) {
         const rawValue = requireValue(argv, ++i, arg);
         const values = parseListValue(rawValue);
         if (values.length === 0) {
-          console.error(`[EnvSync] L'opzione ${arg} richiede almeno un percorso valido.`);
+          console.error(`[EnvSync] Option ${arg} requires at least one valid path.`);
           process.exit(1);
         }
         if (!options.envPathsOverridden) {
@@ -67,7 +67,7 @@ function parseArgs(argv) {
         break;
       default:
         if (arg.startsWith('-')) {
-          console.error(`[EnvSync] Opzione sconosciuta: ${arg}`);
+          console.error(`[EnvSync] Unknown option: ${arg}`);
           process.exit(1);
         }
         break;
@@ -87,7 +87,7 @@ function parseListValue(value) {
 function requireValue(argv, index, flag) {
   const value = argv[index];
   if (!value || value.startsWith('-')) {
-    console.error(`[EnvSync] L'opzione ${flag} richiede un valore.`);
+    console.error(`[EnvSync] Option ${flag} requires a value.`);
     process.exit(1);
   }
   return value;
@@ -96,18 +96,18 @@ function requireValue(argv, index, flag) {
 function printHelp() {
   console.log(
     'EnvSync CLI\n\n' +
-      'Mantiene sincronizzate le chiavi tra i file .env* e i relativi .env*.example.\n\n' +
-      'Utilizzo:\n' +
-      '  envsync [opzioni]\n\n' +
-      'Opzioni principali:\n' +
-      '  -e, --env <path>        Percorso di uno o più file .env (ripeti il flag o usa la virgola)\n' +
-      '  -x, --example <path>    Percorso del file .env.example (solo per un singolo .env)\n' +
-      '  -c, --check             Non modifica i file, esce con codice 1 se non sono in sync\n' +
-      '  -s, --silent            Sopprime l\'output non essenziale\n' +
-      '  --from-env              Sincronizza dalle variabili reali agli example (default)\n' +
-      '  --from-example          Aggiorna i file .env a partire dagli example\n' +
-      '  -h, --help              Mostra questo messaggio\n' +
-      '  -v, --version           Versione della CLI\n',
+    'Keeps keys synced between .env* files and their respective .env*.example files.\n\n' +
+    'Usage:\n' +
+    '  envsync [options]\n\n' +
+    'Main options:\n' +
+    '  -e, --env <path>        Path to one or more .env files (repeat flag or use comma)\n' +
+    '  -x, --example <path>    Path to .env.example file (only for single .env)\n' +
+    '  -c, --check             Don\'t modify files, exit with code 1 if not in sync\n' +
+    '  -s, --silent            Suppress non-essential output\n' +
+    '  --from-env              Sync from actual variables to examples (default)\n' +
+    '  --from-example          Update .env files from examples\n' +
+    '  -h, --help              Show this message\n' +
+    '  -v, --version           CLI version\n',
   );
 }
 
@@ -249,7 +249,7 @@ function collectPairs(options) {
 
   if (options.exampleOverridden && map.size > 1) {
     console.error(
-      '[EnvSync] Non puoi usare --example quando sono coinvolti più file .env. Specifica un singolo file con --env.',
+      '[EnvSync] Cannot use --example when multiple .env files are involved. Specify a single file with --env.',
     );
     process.exit(1);
   }
@@ -290,7 +290,7 @@ function collectPairs(options) {
   }
 
   if (pairs.length === 0) {
-    console.error('[EnvSync] Nessun file .env trovato. Usa --env per specificare il percorso.');
+    console.error('[EnvSync] No .env files found. Use --env to specify the path.');
     process.exit(1);
   }
 
@@ -327,11 +327,11 @@ function runEnvToExample(pairs, options) {
   pairs.forEach((pair) => {
     if (!pair.envExists) {
       if (pair.envProvided) {
-        console.error(`[EnvSync] Impossibile trovare il file sorgente: ${pair.envDisplay}`);
+        console.error(`[EnvSync] Cannot find source file: ${pair.envDisplay}`);
         process.exit(1);
       }
       if (!options.silent) {
-        info.warn(`[EnvSync] Nessun file trovato per ${pair.envDisplay}, salto.`);
+        info.warn(`[EnvSync] No file found for ${pair.envDisplay}, skipping.`);
       }
       return;
     }
@@ -355,15 +355,15 @@ function runEnvToExample(pairs, options) {
         hadDifferences = true;
         console.log(`[Check] ${pair.envDisplay} → ${pair.exampleDisplay}`);
         if (missingInExample.length > 0) {
-          console.log('  Chiavi mancanti nell\'example:');
+          console.log('  Keys missing in example:');
           missingInExample.forEach((key) => console.log(`    + ${key}`));
         }
         if (missingInEnv.length > 0) {
-          console.log('  Chiavi obsolete nel .env (non presenti nell\'example):');
+          console.log('  Obsolete keys in .env (not present in example):');
           missingInEnv.forEach((key) => console.log(`    - ${key}`));
         }
       } else if (!options.silent) {
-        console.log(`[Check] ${pair.envDisplay} è sincronizzato con ${pair.exampleDisplay}.`);
+        console.log(`[Check] ${pair.envDisplay} is synced with ${pair.exampleDisplay}.`);
       }
       return;
     }
@@ -394,15 +394,15 @@ function runEnvToExample(pairs, options) {
 
       fs.writeFileSync(pair.examplePath, finalContent, 'utf8');
       info.log(
-        `[EnvSync] ${pair.exampleDisplay}: aggiunte ${missingInExample.length} chiavi da ${pair.envDisplay}.`,
+        `[EnvSync] ${pair.exampleDisplay}: added ${missingInExample.length} keys from ${pair.envDisplay}.`,
       );
     } else if (!options.silent) {
-      info.log(`[EnvSync] ${pair.exampleDisplay}: nessuna nuova chiave da aggiungere.`);
+      info.log(`[EnvSync] ${pair.exampleDisplay}: no new keys to add.`);
     }
 
     if (missingInEnv.length > 0 && !options.silent) {
       info.warn(
-        `[EnvSync] ${pair.exampleDisplay}: chiavi presenti nell'example ma non in ${pair.envDisplay}:`,
+        `[EnvSync] ${pair.exampleDisplay}: keys present in example but not in ${pair.envDisplay}:`,
       );
       missingInEnv.forEach((key) => info.warn(`  - ${key}`));
     }
@@ -410,7 +410,7 @@ function runEnvToExample(pairs, options) {
 
   if (options.check) {
     if (!hadDifferences && processed > 0 && !options.silent) {
-      console.log('[EnvSync] Tutto sincronizzato!');
+      console.log('[EnvSync] Everything synced!');
     }
     process.exit(hadDifferences ? 1 : 0);
   }
@@ -424,11 +424,11 @@ function runExampleToEnv(pairs, options) {
   pairs.forEach((pair) => {
     if (!pair.exampleExists) {
       if (options.exampleOverridden) {
-        console.error(`[EnvSync] Impossibile trovare il file example: ${pair.exampleDisplay}`);
+        console.error(`[EnvSync] Cannot find example file: ${pair.exampleDisplay}`);
         process.exit(1);
       }
       if (!options.silent) {
-        info.warn(`[EnvSync] Nessun file example trovato per ${pair.exampleDisplay}, salto.`);
+        info.warn(`[EnvSync] No example file found for ${pair.exampleDisplay}, skipping.`);
       }
       return;
     }
@@ -453,15 +453,15 @@ function runExampleToEnv(pairs, options) {
         hadDifferences = true;
         console.log(`[Check] ${pair.exampleDisplay} → ${pair.envDisplay}`);
         if (missingInEnv.length > 0) {
-          console.log('  Chiavi mancanti nel .env:');
+          console.log('  Keys missing in .env:');
           missingInEnv.forEach((key) => console.log(`    + ${key}`));
         }
         if (extraInEnv.length > 0) {
-          console.log('  Chiavi extra nel .env (rimuovile o aggiungile all\'example):');
+          console.log('  Extra keys in .env (remove them or add to example):');
           extraInEnv.forEach((key) => console.log(`    - ${key}`));
         }
       } else if (!options.silent) {
-        console.log(`[Check] ${pair.envDisplay} è sincronizzato con ${pair.exampleDisplay}.`);
+        console.log(`[Check] ${pair.envDisplay} is synced with ${pair.exampleDisplay}.`);
       }
       return;
     }
@@ -481,7 +481,7 @@ function runExampleToEnv(pairs, options) {
       });
       if (!options.silent) {
         info.log(
-          `[EnvSync] ${pair.envDisplay}: rimosse ${extraInEnv.length} chiavi non più presenti nell'example.`,
+          `[EnvSync] ${pair.envDisplay}: removed ${extraInEnv.length} keys no longer present in example.`,
         );
       }
     }
@@ -497,7 +497,7 @@ function runExampleToEnv(pairs, options) {
 
       if (!options.silent) {
         info.log(
-          `[EnvSync] ${pair.envDisplay}: aggiunte ${missingInEnv.length} nuove chiavi dall'example.`,
+          `[EnvSync] ${pair.envDisplay}: added ${missingInEnv.length} new keys from example.`,
         );
       }
     }
@@ -511,13 +511,13 @@ function runExampleToEnv(pairs, options) {
       fs.mkdirSync(envDir, { recursive: true });
       fs.writeFileSync(pair.envPath, finalContent, 'utf8');
     } else if (!options.silent) {
-      info.log(`[EnvSync] ${pair.envDisplay}: nessuna modifica necessaria.`);
+      info.log(`[EnvSync] ${pair.envDisplay}: no changes needed.`);
     }
   });
 
   if (options.check) {
     if (!hadDifferences && processed > 0 && !options.silent) {
-      console.log('[EnvSync] Tutto sincronizzato!');
+      console.log('[EnvSync] Everything synced!');
     }
     process.exit(hadDifferences ? 1 : 0);
   }
@@ -525,7 +525,7 @@ function runExampleToEnv(pairs, options) {
 
 function createLogger(silent) {
   if (silent) {
-    const noop = () => {};
+    const noop = () => { };
     return {
       log: noop,
       warn: noop,
@@ -549,7 +549,7 @@ function main() {
   }
 
   if (!options.check && !options.silent) {
-    console.log('[EnvSync] Operazione completata.');
+    console.log('[EnvSync] Operation completed.');
   }
 }
 
