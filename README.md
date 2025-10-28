@@ -51,7 +51,7 @@ npm install -g envsync-cli
 
 ### From source (local)
 ```bash
-git clone https://github.com/your-username/envsync.git
+git clone https://github.com/passasooz/envsync.git
 cd envsync
 npm install
 npm install --global .
