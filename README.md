@@ -44,9 +44,19 @@ The problem?
 
 ## 🧰 Installation
 
-### Via npm (global)
+### Via npm (global) - Consigliato
 ```bash
-npm install -g envsync-cli
+npm install -g @passasooz/envsync
+```
+
+### Via npm (locale in un progetto esistente)
+```bash
+npm install @passasooz/envsync
+```
+
+Dopo l'installazione locale, puoi usare:
+```bash
+npx envsync
 ```
 
 ### From source (local)

@@ -1,6 +1,6 @@
 {
-  "name": "envsync-cli",
-  "version": "0.1.0",
+  "name": "@passasooz/envsync",
+  "version": "0.1.2",
   "description": "CLI per sincronizzare le chiavi tra .env e .env.example (senza valori).",
   "bin": {
     "envsync": "bin/envsync.js"
